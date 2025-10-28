@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Golden Choice Vendy</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+body {
+  background: linear-gradient(to right, #000, #111, #000);
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: #f5c542;
+}
+.machine-wrapper {
+  width: 100%;
+  max-width: 1000px;
+  position: relative;
+}
+.machine-container {
+  background: rgba(0,0,0,0.95);
+  border: 2px solid #f5c542;
+  border-radius: 20px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(245,197,66,0.3);
+}
+h1 {
+  font-size: 26px;
+  margin-bottom: 25px;
+  text-shadow: 0 0 10px #f5c542;
+}
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  perspective: 1200px;
+  margin-bottom: 20px;
+}
+.product-row {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+}
+.product {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center center -150px; /* horizontal radius */
+  width: 110px;
+  padding: 15px 10px;
+  border-radius: 15px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(245,197,66,0.3);
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+.product p { margin: 4px 0; font-weight:600; color:#f5c542; }
+.product span { font-size:14px;color:#d4af37; }
+.product.selected { box-shadow:0 0 20px #f5c542; transform: scale(1.3); z-index:100; }
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #f5c542;
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10;
+}
+#prevBtn { left: -20px; }
+#nextBtn { right: -20px; }
+.controls {
+  margin-top:20px; 
+  display:flex; 
+  flex-wrap:wrap; 
+  justify-content:center; 
+  gap:10px;
+}
+.controls input { 
+  padding:10px; 
+  width:180px; 
+  border-radius:8px; 
+  border:1px solid #f5c542; 
+  background:rgba(255,255,255,0.05); 
+  color:#f5c542; 
+  text-align:center; 
+}
+button { 
+  background:#f5c542; 
+  border:none; 
+  border-radius:10px; 
+  padding:12px 25px; 
+  font-weight:600; 
+  cursor:pointer; 
+}
+button:hover { background:#d4af37; }
+.money-buttons { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; margin-top:15px; }
+.money-btn { background:#f5c542; padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:bold; }
+.money-btn:hover { transform:scale(1.1); background:#ffe58f; }
+.result { margin-top:20px; padding:20px; border-left:4px solid #f5c542; background:rgba(255,255,255,0.05); text-align:left; min-height:70px; color:#ffe89c; border-radius:12px; }
+.dispensed-container { margin-top:20px; display:flex; flex-wrap:wrap; justify-content:center; gap:15px; min-height:50px; }
+.falling-product { position:absolute; width:120px; text-align:center; font-weight:600; color:#f5c542; background:rgba(245,197,66,0.1); border:1px solid #f5c542; border-radius:12px; padding:10px; animation:fallToDispense 0.8s ease forwards; z-index:100; }
+@keyframes fallToDispense { 0% { transform:translateY(0); opacity:1;} 100% { transform:translateY(var(--fall-distance)); opacity:1;} }
+</style>
+</head>
+<body>
+<div class="machine-wrapper">
+  <div class="machine-container">
+    <h1>💰 Golden Choice Vendy 💰</h1>
+    <div class="carousel-container">
+      <button class="carousel-btn" id="prevBtn">◀</button>
+      <div class="product-row" id="productRow">
+        <div class="product" data-price="45" data-name="Coca-Cola" data-emoji="🥤">🥤<p>Coca-Cola</p><span>NT$45</span></div>
+        <div class="product" data-price="50" data-name="Pepsi" data-emoji="🥤">🥤<p>Pepsi</p><span>NT$50</span></div>
+        <div class="product" data-price="60" data-name="Milk Tea" data-emoji="🧋">🧋<p>Milk Tea</p><span>NT$60</span></div>
+        <div class="product" data-price="40" data-name="Chocolate Bar" data-emoji="🍫">🍫<p>Chocolate Bar</p><span>NT$40</span></div>
+        <div class="product" data-price="80" data-name="Burger" data-emoji="🍔">🍔<p>Burger</p><span>NT$80</span></div>
+        <div class="product" data-price="70" data-name="Fries" data-emoji="🍟">🍟<p>Fries</p><span>NT$70</span></div>
+      </div>
+      <button class="carousel-btn" id="nextBtn">▶</button>
+    </div>
+
+    <div class="controls">
+      <input type="number" id="money" placeholder="Insert Money" min="0">
+      <input type="hidden" id="price">
+      <button id="calculateBtn">Purchase</button>
+      <button id="resetBtn">Reset</button>
+    </div>
+    <div class="money-buttons">
+      <button class="money-btn" data-value="1">NT$1</button>
+      <button class="money-btn" data-value="5">NT$5</button>
+      <button class="money-btn" data-value="10">NT$10</button>
+      <button class="money-btn" data-value="50">NT$50</button>
+      <button class="money-btn" data-value="100">NT$100</button>
+      <button class="money-btn" data-value="500">NT$500</button>
+      <button class="money-btn" data-value="1000">NT$1000</button>
+    </div>
+    <div class="result" id="output"></div>
+  </div>
+  <div class="dispensed-container" id="dispensedContainer"></div>
+</div>
+
+<script>
+const products = document.querySelectorAll('.product');
+const productRow = document.getElementById('productRow');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+let rotation = 0;
+let autoRotate = true;
+
+// Horizontal 3D sphere carousel
+function updateCarousel() {
+  const N = products.length;
+  const angle = 360 / N;
+  products.forEach((p, i) => {
+    const offset = i * angle + rotation;
+    const rad = offset * Math.PI / 180;
+    const scale = 0.5 + 0.5 * Math.cos(rad); // front bigger, sides smaller
+    const zIndex = Math.round(scale * 100);
+    p.style.transform = `rotateY(${offset}deg) translateZ(150px) scale(${scale})`;
+    p.style.zIndex = zIndex;
+    p.style.filter = `brightness(${0.5 + 0.5*scale})`;
+  });
+}
+updateCarousel();
+
+// Continuous auto rotation
+setInterval(()=> { if(autoRotate){ rotation += 0.4; updateCarousel(); } }, 30);
+
+// Manual rotation buttons
+prevBtn.addEventListener('click', ()=>{ autoRotate=false; rotation -= 360 / products.length; updateCarousel(); });
+nextBtn.addEventListener('click', ()=>{ autoRotate=false; rotation += 360 / products.length; updateCarousel(); });
+
+// Product selection & centering
+products.forEach((item, index)=>{
+  item.addEventListener('click', ()=>{
+    autoRotate=false;
+    products.forEach(p=>p.classList.remove('selected'));
+    item.classList.add('selected');
+    rotation = -index * (360 / products.length);
+    updateCarousel();
+    document.getElementById('price').value = item.dataset.price;
+    document.getElementById('output').innerHTML = `<strong>Selected:</strong> ${item.dataset.name} (NT$${item.dataset.price})`;
+  });
+});
+
+// Money buttons
+document.querySelectorAll('.money-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const moneyInput=document.getElementById('money');
+    moneyInput.value = Math.max(0, parseInt(moneyInput.value||0)+parseInt(btn.dataset.value));
+  });
+});
+
+// Purchase & dispense
+document.getElementById('calculateBtn').addEventListener('click', ()=>{
+  const moneyInserted=parseInt(document.getElementById('money').value);
+  const price=parseInt(document.getElementById('price').value);
+  const output=document.getElementById('output');
+  const dispensedContainer=document.getElementById('dispensedContainer');
+
+  if(isNaN(moneyInserted)||isNaN(price)){ alert("⚠️ Insert money & select item."); return; }
+  if(moneyInserted<price){ alert("⚠️ Not enough money!"); return; }
+
+  let change=moneyInserted-price;
+  const dollars=[1000,500,100,50,10,5,1];
+  let text=`<strong>Change:</strong> NT$${change}<br><br>`;
+  dollars.forEach(d=>{ const count=Math.floor(change/d); if(count>0){ text+=`${d} × ${count}<br>`; change-=count*d; }});
+  text+= "<br>💎 Thank you for using Golden Choice Vendy!";
+  output.innerHTML=text;
+
+  const selectedItem=document.querySelector('.product.selected');
+  if(selectedItem){
+    const name=selectedItem.dataset.name;
+    const emoji=selectedItem.dataset.emoji;
+    const falling=document.createElement('div');
+    falling.classList.add('falling-product');
+    falling.innerHTML=`${emoji}<p>${name}</p>`;
+    const rect=selectedItem.getBoundingClientRect();
+    const wrapperRect=document.querySelector('.machine-wrapper').getBoundingClientRect();
+    falling.style.left=rect.left-wrapperRect.left+'px';
+    falling.style.top=rect.top-wrapperRect.top+'px';
+    document.querySelector('.machine-wrapper').appendChild(falling);
+    const dispRect=dispensedContainer.getBoundingClientRect();
+    falling.style.setProperty('--fall-distance', (dispRect.top-rect.top)+'px');
+    falling.addEventListener('animationend', ()=>{
+      falling.style.position='static';
+      falling.style.transform='none';
+      falling.style.left='auto';
+      falling.style.top='auto';
+      dispensedContainer.appendChild(falling);
+    });
+  }
+});
+
+// Reset
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  document.getElementById('money').value='';
+  document.getElementById('price').value='';
+  products.forEach(p=>p.classList.remove('selected'));
+  document.getElementById('output').innerHTML='';
+  document.getElementById('dispensedContainer').innerHTML='';
+  autoRotate=true;
+});
+</script>
+</body>
+</html>
