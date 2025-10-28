@@ -147,12 +147,33 @@ button:hover { background:#d4af37; }
     justify-content: center;
 }
 
-/* Add these styles for the copyright section */
+/* Add these styles inside the existing <style> tag */
 .copyright-section {
     width: 100%;
     max-width: 800px;
     margin: 0 auto;
     padding: 5px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.copyright-main {
+    font-size: 16px;
+    font-weight: 600;
+    color: #f5c542;
+}
+
+.copyright-details {
+    font-size: 12px;
+    color: #ffe89c;
+    line-height: 1.4;
+}
+
+.copyright-contact {
+    font-size: 13px;
+    color: #f5c542;
+    margin-top: 5px;
 }
 
 /* Update body style to ensure proper spacing */
@@ -168,7 +189,7 @@ body {
 <body>
 <div class="machine-wrapper">
   <div class="machine-container">
-    <h1>💰 Golden Choice Vendy 💰</h1>
+    <h1> Golden Choice Vendy </h1>
     <div class="carousel-container">
       <button class="carousel-btn" id="prevBtn">◀</button>
       <div class="product-row" id="productRow">
@@ -204,8 +225,19 @@ body {
 
 <!-- Update the footer section -->
 <footer class="footer">
-  <div>© <span id="year"></span> Faith's Snack Vendie</div>
-  <small>All rights reserved. No part of this software may be reproduced without permission.</small>
+    <div class="copyright-section">
+        <div class="copyright-main">
+            © <span id="year"></span> Faith's Snack Vendie
+        </div>
+        <div class="copyright-details">
+            All rights reserved. This vending machine software and its content are protected 
+            by copyright laws and international treaties. Unauthorized reproduction or 
+            distribution is strictly prohibited.
+        </div>
+        <div class="copyright-contact">
+            Powered by Faith's Snack Vendie™ | Made with 💝
+        </div>
+    </div>
 </footer>
 
 </body>
