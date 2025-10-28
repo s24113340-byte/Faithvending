@@ -64,19 +64,20 @@ h1 {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform-origin: center center -150px; /* horizontal radius */
-  width: 110px;
-  padding: 15px 10px;
-  border-radius: 15px;
+  transform-origin: center center -110px; /* horizontal radius reduced for tighter spacing */
+  width: 150px; /* bigger product */
+  padding: 18px 12px; /* larger hit area */
+  border-radius: 12px;
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(245,197,66,0.3);
   text-align: center;
   cursor: pointer;
   transition: transform 0.5s ease, filter 0.5s ease;
+  font-size: 28px; /* make emoji and main icon larger */
 }
-.product p { margin: 4px 0; font-weight:600; color:#f5c542; }
-.product span { font-size:14px;color:#d4af37; }
-.product.selected { box-shadow:0 0 20px #f5c542; transform: scale(1.3); z-index:100; }
+.product p { margin: 4px 0; font-weight:600; color:#f5c542; font-size:16px; }
+.product span { font-size:18px;color:#d4af37; } /* price smaller visually than emoji */
+.product.selected { box-shadow:0 0 28px #f5c542; transform: scale(1.35); z-index:100; }
 .carousel-btn {
   position: absolute;
   top: 50%;
@@ -408,7 +409,7 @@ function updateCarousel() {
     const rad = offset * Math.PI / 180;
     const scale = 0.5 + 0.5 * Math.cos(rad); // front bigger, sides smaller
     const zIndex = Math.round(scale * 100);
-    p.style.transform = `rotateY(${offset}deg) translateZ(150px) scale(${scale})`;
+    p.style.transform = `rotateY(${offset}deg) translateZ(110px) scale(${scale})`; // translateZ reduced for tighter spacing
     p.style.zIndex = zIndex;
     p.style.filter = `brightness(${0.5 + 0.5*scale})`;
   });
