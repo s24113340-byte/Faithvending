@@ -111,6 +111,23 @@ button:hover { background:#d4af37; }
 .dispensed-container { margin-top:20px; display:flex; flex-wrap:wrap; justify-content:center; gap:15px; min-height:50px; }
 .falling-product { position:absolute; width:120px; text-align:center; font-weight:600; color:#f5c542; background:rgba(245,197,66,0.1); border:1px solid #f5c542; border-radius:12px; padding:10px; animation:fallToDispense 0.8s ease forwards; z-index:100; }
 @keyframes fallToDispense { 0% { transform:translateY(0); opacity:1;} 100% { transform:translateY(var(--fall-distance)); opacity:1;} }
+
+/* Added footer styles */
+.footer {
+  margin-top: 20px;
+  padding: 12px 20px;
+  text-align: center;
+  color: #f5c542;
+  background: linear-gradient(90deg, rgba(0,0,0,0.6), rgba(17,17,17,0.6));
+  border-top: 1px solid rgba(245,197,66,0.15);
+  border-radius: 12px;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 6px 20px rgba(245,197,66,0.06);
+  font-size: 14px;
+}
+.footer small { color: #ffe89c; font-weight:500; }
 </style>
 </head>
 <body>
@@ -150,6 +167,14 @@ button:hover { background:#d4af37; }
   <div class="dispensed-container" id="dispensedContainer"></div>
 </div>
 
+<!-- Added footer -->
+<footer class="footer">
+  <div>© <span id="year"></span> Faith's Snack Vendie</div>
+  <small>All rights reserved.</small>
+</footer>
+
+</body>
+</html>
 <script>
 const products = document.querySelectorAll('.product');
 const productRow = document.getElementById('productRow');
@@ -252,6 +277,7 @@ document.getElementById('resetBtn').addEventListener('click', ()=>{
   document.getElementById('dispensedContainer').innerHTML='';
   autoRotate=true;
 });
+
+// Set current year in footer
+document.getElementById('year').textContent = new Date().getFullYear();
 </script>
-</body>
-</html>
