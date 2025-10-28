@@ -184,6 +184,85 @@ body {
     position: relative;
     box-sizing: border-box;
 }
+
+/* Add these styles for the dispenser slot */
+.dispenser-slot {
+    position: relative;
+    width: 200px;
+    height: 80px;
+    margin: 20px auto 0;
+    background: linear-gradient(0deg, rgba(0,0,0,0.9), rgba(20,20,20,0.9));
+    border-radius: 10px;
+    border: 2px solid rgba(245,197,66,0.3);
+    overflow: hidden;
+    perspective: 1000px;
+}
+
+.slot-door {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, #222, #333);
+    border: 1px solid rgba(245,197,66,0.2);
+    transition: transform 0.5s ease;
+    transform-origin: center;
+    z-index: 2;
+}
+
+.left-door {
+    left: 0;
+    transform-origin: left;
+}
+
+.right-door {
+    right: 0;
+    transform-origin: right;
+}
+
+.slot-inner {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(0deg, #000, #111);
+    z-index: 1;
+}
+
+.slot-shadow {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 40px;
+    background: linear-gradient(0deg, rgba(0,0,0,0.8), transparent);
+}
+
+/* Update falling product animation */
+.falling-product {
+    animation: fallToDispense 1s ease forwards;
+}
+
+@keyframes fallToDispense {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    70% {
+        transform: translateY(var(--fall-distance)) scale(1);
+        opacity: 1;
+    }
+    80% {
+        transform: translateY(var(--fall-distance)) scale(0.8);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(var(--fall-distance)) scale(0.7);
+        opacity: 0;
+    }
+}
+
+/* Add hover effect to the slot */
+.dispenser-slot:hover {
+    box-shadow: 0 0 20px rgba(245,197,66,0.2);
+}
 </style>
 </head>
 <body>
@@ -219,6 +298,14 @@ body {
       <button class="money-btn" data-value="1000">NT$1000</button>
     </div>
     <div class="result" id="output"></div>
+
+    <div class="dispenser-slot">
+      <div class="slot-door left-door"></div>
+      <div class="slot-door right-door"></div>
+      <div class="slot-inner">
+        <div class="slot-shadow"></div>
+      </div>
+    </div>
   </div>
   <div class="dispensed-container" id="dispensedContainer"></div>
 </div>
@@ -313,24 +400,43 @@ document.getElementById('calculateBtn').addEventListener('click', ()=>{
 
   const selectedItem=document.querySelector('.product.selected');
   if(selectedItem){
-    const name=selectedItem.dataset.name;
-    const emoji=selectedItem.dataset.emoji;
-    const falling=document.createElement('div');
+    const name = selectedItem.dataset.name;
+    const emoji = selectedItem.dataset.emoji;
+    
+    // Animate slot doors
+    const leftDoor = document.querySelector('.left-door');
+    const rightDoor = document.querySelector('.right-door');
+    
+    // Open doors
+    leftDoor.style.transform = 'rotateY(-120deg)';
+    rightDoor.style.transform = 'rotateY(120deg)';
+    
+    const falling = document.createElement('div');
     falling.classList.add('falling-product');
-    falling.innerHTML=`${emoji}<p>${name}</p>`;
-    const rect=selectedItem.getBoundingClientRect();
-    const wrapperRect=document.querySelector('.machine-wrapper').getBoundingClientRect();
-    falling.style.left=rect.left-wrapperRect.left+'px';
-    falling.style.top=rect.top-wrapperRect.top+'px';
+    falling.innerHTML = `${emoji}<p>${name}</p>`;
+    
+    const rect = selectedItem.getBoundingClientRect();
+    const wrapperRect = document.querySelector('.machine-wrapper').getBoundingClientRect();
+    falling.style.left = rect.left - wrapperRect.left + 'px';
+    falling.style.top = rect.top - wrapperRect.top + 'px';
     document.querySelector('.machine-wrapper').appendChild(falling);
-    const dispRect=dispensedContainer.getBoundingClientRect();
-    falling.style.setProperty('--fall-distance', (dispRect.top-rect.top)+'px');
-    falling.addEventListener('animationend', ()=>{
-      falling.style.position='static';
-      falling.style.transform='none';
-      falling.style.left='auto';
-      falling.style.top='auto';
-      dispensedContainer.appendChild(falling);
+    
+    const slotRect = document.querySelector('.dispenser-slot').getBoundingClientRect();
+    falling.style.setProperty('--fall-distance', (slotRect.top - rect.top + 20) + 'px');
+    
+    falling.addEventListener('animationend', () => {
+        // Close doors after item falls
+        setTimeout(() => {
+            leftDoor.style.transform = 'rotateY(0deg)';
+            rightDoor.style.transform = 'rotateY(0deg)';
+        }, 500);
+        
+        // Create dispensed item in slot
+        const dispensedItem = document.createElement('div');
+        dispensedItem.classList.add('dispensed-item');
+        dispensedItem.innerHTML = `${emoji}<p>${name}</p>`;
+        dispensedContainer.appendChild(dispensedItem);
+        falling.remove();
     });
   }
 });
