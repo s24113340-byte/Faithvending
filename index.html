@@ -21,13 +21,17 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   min-height: 100vh;
+  position: relative;
   color: #f5c542;
 }
 .machine-wrapper {
   width: 100%;
   max-width: 1000px;
   position: relative;
+  flex: 1;
+  margin-bottom: 80px; /* Add space for footer */
 }
 .machine-container {
   background: rgba(0,0,0,0.95);
@@ -120,20 +124,24 @@ button:hover { background:#d4af37; }
 .falling-product { position:absolute; width:120px; text-align:center; font-weight:600; color:#f5c542; background:rgba(245,197,66,0.1); border:1px solid #f5c542; border-radius:12px; padding:10px; animation:fallToDispense 0.8s ease forwards; z-index:100; }
 @keyframes fallToDispense { 0% { transform:translateY(0); opacity:1;} 100% { transform:translateY(var(--fall-distance)); opacity:1;} }
 
-/* Added footer styles */
+/* Update the footer styles in the <style> section */
 .footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   margin-top: 20px;
   padding: 12px 20px;
   text-align: center;
   color: #f5c542;
-  background: linear-gradient(90deg, rgba(0,0,0,0.6), rgba(17,17,17,0.6));
+  background: linear-gradient(90deg, rgba(0,0,0,0.95), rgba(17,17,17,0.95));
   border-top: 1px solid rgba(245,197,66,0.15);
-  border-radius: 12px;
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 6px 20px rgba(245,197,66,0.06);
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
   font-size: 14px;
+  z-index: 1000;
 }
 .footer small { color: #ffe89c; font-weight:500; }
 .copyright-section {
