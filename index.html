@@ -263,6 +263,46 @@ body {
 .dispenser-slot:hover {
     box-shadow: 0 0 20px rgba(245,197,66,0.2);
 }
+
+/* Add these styles for the dispensed items */
+.dispensed-item {
+    position: relative;
+    background: rgba(245,197,66,0.1);
+    border: 1px solid #f5c542;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    min-width: 100px;
+    animation: appear 0.3s ease-out;
+}
+
+.item-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #f5c542;
+    color: #000;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 </style>
 </head>
 <body>
@@ -381,74 +421,123 @@ document.querySelectorAll('.money-btn').forEach(btn=>{
   });
 });
 
-// Purchase & dispense
+// Add this before the purchase event listener
+let itemCounts = {};
+
+// Update the purchase event listener section
 document.getElementById('calculateBtn').addEventListener('click', ()=>{
-  const moneyInserted=parseInt(document.getElementById('money').value);
-  const price=parseInt(document.getElementById('price').value);
-  const output=document.getElementById('output');
-  const dispensedContainer=document.getElementById('dispensedContainer');
+    const moneyInserted = parseInt(document.getElementById('money').value);
+    const price = parseInt(document.getElementById('price').value);
+    const output = document.getElementById('output');
+    const dispensedContainer = document.getElementById('dispensedContainer');
 
-  if(isNaN(moneyInserted)||isNaN(price)){ alert("⚠️ Insert money & select item."); return; }
-  if(moneyInserted<price){ alert("⚠️ Not enough money!"); return; }
+    if(isNaN(moneyInserted) || isNaN(price)){ 
+        alert("⚠️ Insert money & select item."); 
+        return; 
+    }
+    if(moneyInserted < price){ 
+        alert("⚠️ Not enough money!"); 
+        return; 
+    }
 
-  let change=moneyInserted-price;
-  const dollars=[1000,500,100,50,10,5,1];
-  let text=`<strong>Change:</strong> NT$${change}<br><br>`;
-  dollars.forEach(d=>{ const count=Math.floor(change/d); if(count>0){ text+=`${d} × ${count}<br>`; change-=count*d; }});
-  text+= "<br>💎 Thank you for using Golden Choice Vendy!";
-  output.innerHTML=text;
-
-  const selectedItem=document.querySelector('.product.selected');
-  if(selectedItem){
-    const name = selectedItem.dataset.name;
-    const emoji = selectedItem.dataset.emoji;
-    
-    // Animate slot doors
-    const leftDoor = document.querySelector('.left-door');
-    const rightDoor = document.querySelector('.right-door');
-    
-    // Open doors
-    leftDoor.style.transform = 'rotateY(-120deg)';
-    rightDoor.style.transform = 'rotateY(120deg)';
-    
-    const falling = document.createElement('div');
-    falling.classList.add('falling-product');
-    falling.innerHTML = `${emoji}<p>${name}</p>`;
-    
-    const rect = selectedItem.getBoundingClientRect();
-    const wrapperRect = document.querySelector('.machine-wrapper').getBoundingClientRect();
-    falling.style.left = rect.left - wrapperRect.left + 'px';
-    falling.style.top = rect.top - wrapperRect.top + 'px';
-    document.querySelector('.machine-wrapper').appendChild(falling);
-    
-    const slotRect = document.querySelector('.dispenser-slot').getBoundingClientRect();
-    falling.style.setProperty('--fall-distance', (slotRect.top - rect.top + 20) + 'px');
-    
-    falling.addEventListener('animationend', () => {
-        // Close doors after item falls
-        setTimeout(() => {
-            leftDoor.style.transform = 'rotateY(0deg)';
-            rightDoor.style.transform = 'rotateY(0deg)';
-        }, 500);
-        
-        // Create dispensed item in slot
-        const dispensedItem = document.createElement('div');
-        dispensedItem.classList.add('dispensed-item');
-        dispensedItem.innerHTML = `${emoji}<p>${name}</p>`;
-        dispensedContainer.appendChild(dispensedItem);
-        falling.remove();
+    let change = moneyInserted-price;
+    const dollars = [1000,500,100,50,10,5,1];
+    let text = `<strong>Change:</strong> NT$${change}<br><br>`;
+    dollars.forEach(d=>{ 
+        const count = Math.floor(change/d); 
+        if(count>0){ 
+            text += `${d} × ${count}<br>`; 
+            change -= count*d; 
+        }
     });
-  }
+    text += "<br>💎 Thank you for using Golden Choice Vendy!";
+    output.innerHTML = text;
+
+    const selectedItem = document.querySelector('.product.selected');
+    if(selectedItem){
+        const name = selectedItem.dataset.name;
+        const emoji = selectedItem.dataset.emoji;
+        
+        // Initialize count if first time
+        itemCounts[name] = itemCounts[name] || 0;
+        itemCounts[name]++;
+        
+        // Animate slot doors
+        const leftDoor = document.querySelector('.left-door');
+        const rightDoor = document.querySelector('.right-door');
+        
+        // Open doors
+        leftDoor.style.transform = 'rotateY(-120deg)';
+        rightDoor.style.transform = 'rotateY(120deg)';
+        
+        // Only create falling animation for first purchase of each item
+        if(itemCounts[name] === 1) {
+            const falling = document.createElement('div');
+            falling.classList.add('falling-product');
+            falling.innerHTML = `${emoji}<p>${name}</p>`;
+            
+            const rect = selectedItem.getBoundingClientRect();
+            const wrapperRect = document.querySelector('.machine-wrapper').getBoundingClientRect();
+            falling.style.left = rect.left - wrapperRect.left + 'px';
+            falling.style.top = rect.top - wrapperRect.top + 'px';
+            document.querySelector('.machine-wrapper').appendChild(falling);
+            
+            const slotRect = document.querySelector('.dispenser-slot').getBoundingClientRect();
+            falling.style.setProperty('--fall-distance', (slotRect.top - rect.top + 20) + 'px');
+            
+            falling.addEventListener('animationend', () => {
+                setTimeout(() => {
+                    leftDoor.style.transform = 'rotateY(0deg)';
+                    rightDoor.style.transform = 'rotateY(0deg)';
+                }, 500);
+                
+                updateDispensedItem(name, emoji);
+                falling.remove();
+            });
+        } else {
+            // Just update the counter for existing item
+            setTimeout(() => {
+                leftDoor.style.transform = 'rotateY(0deg)';
+                rightDoor.style.transform = 'rotateY(0deg)';
+            }, 500);
+            updateDispensedItem(name, emoji);
+        }
+    }
+
+    // Clear money input after purchase
+    document.getElementById('money').value = '';
 });
+
+// Add this function to update dispensed items
+function updateDispensedItem(name, emoji) {
+    const dispensedContainer = document.getElementById('dispensedContainer');
+    let dispensedItem = dispensedContainer.querySelector(`[data-name="${name}"]`);
+    
+    if (dispensedItem) {
+        // Update existing item counter
+        dispensedItem.querySelector('.item-count').textContent = itemCounts[name];
+    } else {
+        // Create new dispensed item with counter
+        dispensedItem = document.createElement('div');
+        dispensedItem.classList.add('dispensed-item');
+        dispensedItem.dataset.name = name;
+        dispensedItem.innerHTML = `
+            <span class="item-count">${itemCounts[name]}</span>
+            ${emoji}<p>${name}</p>
+        `;
+        dispensedContainer.appendChild(dispensedItem);
+    }
+}
 
 // Reset
 document.getElementById('resetBtn').addEventListener('click', ()=>{
-  document.getElementById('money').value='';
-  document.getElementById('price').value='';
-  products.forEach(p=>p.classList.remove('selected'));
-  document.getElementById('output').innerHTML='';
-  document.getElementById('dispensedContainer').innerHTML='';
-  autoRotate=true;
+    document.getElementById('money').value = '';
+    document.getElementById('price').value = '';
+    products.forEach(p => p.classList.remove('selected'));
+    document.getElementById('output').innerHTML = '';
+    document.getElementById('dispensedContainer').innerHTML = ''; // Clear all dispensed items
+    itemCounts = {};
+    autoRotate = true;
 });
 
 // Set current year in footer
