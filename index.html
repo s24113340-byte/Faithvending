@@ -25,6 +25,8 @@ body {
   min-height: 100vh;
   position: relative;
   color: #f5c542;
+  padding-bottom: 120px; /* Add padding to prevent content from being hidden behind footer */
+  box-sizing: border-box;
 }
 .machine-wrapper {
   width: 100%;
@@ -126,49 +128,40 @@ button:hover { background:#d4af37; }
 
 /* Update the footer styles in the <style> section */
 .footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin-top: 20px;
-  padding: 12px 20px;
-  text-align: center;
-  color: #f5c542;
-  background: linear-gradient(90deg, rgba(0,0,0,0.95), rgba(17,17,17,0.95));
-  border-top: 1px solid rgba(245,197,66,0.15);
-  max-width: 100%;
-  margin-left: 0;
-  margin-right: 0;
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
-  font-size: 14px;
-  z-index: 1000;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 12px 20px;
+    text-align: center;
+    color: #f5c542;
+    background: linear-gradient(90deg, rgba(0,0,0,0.95), rgba(17,17,17,0.95));
+    border-top: 1px solid rgba(245,197,66,0.15);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+    z-index: 1000;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
-.footer small { color: #ffe89c; font-weight:500; }
+
+/* Add these styles for the copyright section */
 .copyright-section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 15px 0;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 5px 0;
 }
 
-.copyright-main {
-  font-size: 16px;
-  font-weight: 600;
-  color: #f5c542;
-}
-
-.copyright-details {
-  font-size: 12px;
-  color: #ffe89c;
-  line-height: 1.4;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.copyright-contact {
-  font-size: 13px;
-  color: #f5c542;
-  margin-top: 5px;
+/* Update body style to ensure proper spacing */
+body {
+    margin: 0;
+    padding-bottom: 120px; /* Add padding to prevent content from being hidden behind footer */
+    min-height: 100vh;
+    position: relative;
+    box-sizing: border-box;
 }
 </style>
 </head>
