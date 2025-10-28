@@ -136,6 +136,32 @@ button:hover { background:#d4af37; }
   font-size: 14px;
 }
 .footer small { color: #ffe89c; font-weight:500; }
+.copyright-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 15px 0;
+}
+
+.copyright-main {
+  font-size: 16px;
+  font-weight: 600;
+  color: #f5c542;
+}
+
+.copyright-details {
+  font-size: 12px;
+  color: #ffe89c;
+  line-height: 1.4;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.copyright-contact {
+  font-size: 13px;
+  color: #f5c542;
+  margin-top: 5px;
+}
 </style>
 </head>
 <body>
@@ -177,8 +203,17 @@ button:hover { background:#d4af37; }
 
 <!-- Update the footer section -->
 <footer class="footer">
-  <div>© <span id="year"></span> Faith's Snack Vendie</div>
-  <small>All rights reserved. No part of this software may be reproduced without permission.</small>
+  <div class="copyright-section">
+    <div class="copyright-main">© <span id="year"></span> Faith's Snack Vendie</div>
+    <div class="copyright-details">
+      All rights reserved worldwide. This software and its content are protected by copyright laws 
+      and international treaties. Any unauthorized reproduction, distribution, or modification 
+      of this software is strictly prohibited and may result in severe legal consequences.
+    </div>
+    <div class="copyright-contact">
+      Faith's Snack Vendie™ | Patent Pending | Made with 💝
+    </div>
+  </div>
 </footer>
 
 </body>
