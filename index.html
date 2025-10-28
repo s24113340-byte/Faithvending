@@ -12,7 +12,7 @@ of it, may result in severe civil and criminal penalties.
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Golden Choice Vendy</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
 <style>
 body {
   background: linear-gradient(to right, #000, #111, #000);
@@ -44,9 +44,7 @@ body {
   box-shadow: 0 0 40px rgba(245,197,66,0.3);
 }
 h1 {
-  font-size: 26px;
-  margin-bottom: 25px;
-  text-shadow: 0 0 10px #f5c542;
+  /* replaced with .brand-title styles below */
 }
 .carousel-container {
   position: relative;
@@ -303,12 +301,37 @@ body {
         transform: translateY(0);
     }
 }
+
+.brand-title {
+  font-family: 'Cinzel', 'Poppins', serif;
+  font-size: 34px;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #f9d976 0%, #f39c12 40%, #f5c542 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 6px 20px rgba(245,197,66,0.12), 0 0 8px rgba(245,197,66,0.06);
+  display: inline-block;
+  padding: 8px 18px;
+  border-radius: 10px;
+  box-shadow: 0 6px 30px rgba(245,197,66,0.06), inset 0 -2px 6px rgba(0,0,0,0.4);
+  transition: transform 220ms ease, text-shadow 220ms ease;
+  cursor: default;
+}
+.brand-title:hover {
+  transform: translateY(-3px) scale(1.02);
+  text-shadow: 0 10px 30px rgba(245,197,66,0.28);
+}
 </style>
 </head>
 <body>
 <div class="machine-wrapper">
   <div class="machine-container">
-    <h1> Golden Choice Vendy </h1>
+-    <h1> Golden Choice Vendy </h1>
++    <h1 class="brand-title">👑 Golden Choice Vendy ✨</h1>
     <div class="carousel-container">
       <button class="carousel-btn" id="prevBtn">◀</button>
       <div class="product-row" id="productRow">
