@@ -16,6 +16,8 @@ of it, may result in severe civil and criminal penalties.
 <style>
 :root{
   --footer-height: 110px;
+  --theme-primary: #f5c542;
+  --theme-secondary: #d4af37;
 }
 
 /* Layout + centering: ensure the machine sits centered within the viewport
@@ -35,6 +37,7 @@ body {
   /* keep space at bottom to avoid overlap with fixed footer */
   padding-bottom: var(--footer-height);
   box-sizing: border-box;
+  animation: themeChange 30s infinite;
 }
 
 /* center the machine wrapper and avoid overlap */
@@ -355,6 +358,33 @@ body {
   transform: translateY(-3px) scale(1.02);
   text-shadow: 0 10px 30px rgba(245,197,66,0.28);
 }
+
+/* Add these styles in the existing <style> section */
+@keyframes themeChange {
+  0% {
+    background: linear-gradient(to right, #000, #111, #000); /* Current black-gold */
+  }
+  33% {
+    background: linear-gradient(to right, #000, #2a0845, #000); /* Purple-black */
+  }
+  66% {
+    background: linear-gradient(to right, #000, #16222A, #000); /* Blue-black */
+  }
+  100% {
+    background: linear-gradient(to right, #000, #111, #000); /* Back to black-gold */
+  }
+}
+
+body {
+  /* Update existing body style */
+  animation: themeChange 30s infinite;
+  /* Keep other existing body properties */
+}
+
+/* Add subtle transitions for other golden elements */
+.product, .footer, .brand-title, .controls input, button {
+  transition: all 0.5s ease;
+}
 </style>
 </head>
 <body>
@@ -603,4 +633,28 @@ document.getElementById('resetBtn').addEventListener('click', ()=>{
 
 // Set current year in footer
 document.getElementById('year').textContent = new Date().getFullYear();
+
+// Add this to your existing script
+// Theme color adjustment function
+function updateThemeColors() {
+    const time = (Date.now() / 1000) % 30; // 30-second cycle
+    let primaryColor, secondaryColor;
+    
+    if (time < 10) { // Golden theme
+        primaryColor = '#f5c542';
+        secondaryColor = '#d4af37';
+    } else if (time < 20) { // Purple theme
+        primaryColor = '#9b4dca';
+        secondaryColor = '#7e3aa3';
+    } else { // Blue theme
+        primaryColor = '#4a90e2';
+        secondaryColor = '#357abd';
+    }
+
+    document.documentElement.style.setProperty('--theme-primary', primaryColor);
+    document.documentElement.style.setProperty('--theme-secondary', secondaryColor);
+}
+
+// Update colors every second
+setInterval(updateThemeColors, 1000);
 </script>
